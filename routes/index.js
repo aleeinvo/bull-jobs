@@ -1,21 +1,25 @@
 var express = require('express');
 var router = express.Router();
-const mailer = require('../services/mailer');
+const mailQueue = require('../services/mailQueue');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Bull Jobs' });
 });
 
 router.get('/dev', async (req, res) => {
-  let info = await mailer.send('ali.asghar@gmail.com');
+  const tos = [
+    'aleedhx@gmail.com',
+    'ali.asghar@invozone.com',
+    'aleedhillon@gmail.com'
+  ];
+
+  mailQueue.add(tos);
 
   return res.status(200).json({
-    message: 'Mail has been sent successfully',
-    data: {
-      info: info
-    }
+    message: 'Job has been initiated',
+    data: {}
   });
-})
+});
 
 module.exports = router;
